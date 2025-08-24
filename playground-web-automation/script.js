@@ -174,9 +174,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentSectionIndex = 0;
 
     function showSection(index) {
-        // Cleanup previous dynamic descriptions from all sections
-        document.querySelectorAll('.section-description-dynamic').forEach(el => el.remove());
-
         sections.forEach((section, i) => {
             if (i === index) {
                 section.classList.add('active');
@@ -194,15 +191,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (info) {
                     infoTitle.textContent = `Detalhes da Seção - ${info.title}`;
 
-                    // Add description to the playground section, not the info panel
-                    if (section.id !== 'welcome-section' && info.description) {
-                        const h2 = section.querySelector('h2');
-                        if (h2) {
-                            const p = document.createElement('p');
-                            p.className = 'section-description-dynamic';
-                            p.innerHTML = info.description;
-                            h2.insertAdjacentElement('afterend', p);
-                        }
+                    // Update description in the playground section
+                    const descriptionEl = section.querySelector('.section-description-dynamic');
+                    if (descriptionEl) {
+                        descriptionEl.innerHTML = info.description || '';
                     }
                 }
 
