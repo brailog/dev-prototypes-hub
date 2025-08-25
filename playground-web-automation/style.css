@@ -145,6 +145,10 @@ a:hover {
     margin-bottom: 15px;
 }
 
+.dropdown-container {
+    margin-bottom: 15px;
+}
+
 label {
     display: block;
     margin-bottom: 5px;
@@ -219,10 +223,22 @@ input[type="color"] {
     margin: 10px 0;
 }
 
-.checkbox-group label, .radio-group label {
-    display: inline;
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.form-check input[type="checkbox"],
+.form-check input[type="radio"] {
+    width: auto;
+    margin: 0;
+}
+
+.form-check label {
+    margin-bottom: 0;
+    margin-left: 8px;
     font-weight: normal;
-    margin-left: 5px;
 }
 
 .hover-div {
