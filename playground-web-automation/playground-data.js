@@ -39,45 +39,9 @@ const sectionInfo = {
 
 // Code Snippets for each section
 const codeHeaders = {
-    pyautotk: `from pyautotk.elements.widget import Widget
-from pyautotk.elements.helpers.session_helpers import browser_session
-import os
-
-base_dir = os.path.dirname(os.path.abspath(__file__))
-MOCKUP_TEST_URL_FILE = os.path.join(base_dir, "playground.html")`,
-    selenium: `import os
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.select import Select
-
-# Configuração do path
-base_dir = os.path.dirname(os.path.abspath(__file__))
-MOCKUP_TEST_URL_FILE = os.path.join(base_dir, "playground.html")
-
-def setup_driver():
-    driver = webdriver.Chrome()
-    driver.get(f"file://{MOCKUP_TEST_URL_FILE}")
-    return driver`,
-    playwright: `import os
-from playwright.sync_api import sync_playwright
-
-# Configuração do path
-base_dir = os.path.dirname(os.path.abspath(__file__))
-MOCKUP_TEST_URL_FILE = os.path.join(base_dir, "playground.html")
-
-def setup_page():
-    playwright = sync_playwright().start()
-    browser = playwright.chromium.launch()
-    page = browser.new_page()
-    page.goto(f"file://{MOCKUP_TEST_URL_FILE}")
-    return playwright, browser, page
-
-def teardown(playwright, browser):
-    browser.close()
-    playwright.stop()`
+    pyautotk: `...`,
+    selenium: `...`,
+    playwright: `...`
 };
 
 const codeSnippets = {
@@ -87,246 +51,211 @@ const codeSnippets = {
         playwright: `# Bem-vindo ao Playground!\n# Navegue pelas seções para ver os exemplos de código relevantes.`
     },
     'buttons-section': {
-        pyautotk: `
-@browser_session(f"file://{MOCKUP_TEST_URL_FILE}")
+        pyautotk: 
+        `
+@browser_session(MOCKUP_TEST_URL_FILE)
 def test_botoes(session):
     Widget(session, id="primary-btn", text="Botão Primário").click()
-    message = Widget(session, id="button-click-message").properties().get("text")
-    assert "Botão Primário" in message
+    mensagem_depois_click = Widget(session, id="button-click-message").properties().get("text")
+    assert "Botão Primário" in mensagem_depois_click
 
     Widget(session, id="secondary-btn", text="Botão Secundário").click()
-    disabled_btn = Widget(session, id="disabled-btn")
-    assert disabled_btn.properties().get("enabled") is False`,
-        selenium: `
-def test_buttons():
-    driver = setup_driver()
-    
-    try:
-        primary_btn = driver.find_element(By.ID, "primary-btn")
-        primary_btn.click()
-        message = driver.find_element(By.ID, "button-click-message").text
-        assert "Botão Primário" in message
+    mensagem_depois_click = Widget(session, id="button-click-message").properties().get("text")
+    assert "Botão Secundário" in mensagem_depois_click
 
-        disabled_btn = driver.find_element(By.ID, "disabled-btn")
-        assert not disabled_btn.is_enabled()
-    finally:
-        driver.quit()`,
-        playwright: `
-def test_buttons():
-    playwright, browser, page = setup_page()
-    
-    try:
-        page.click("#primary-btn")
-        message = page.text_content("#button-click-message")
-        assert "Botão Primário" in message
-        
-        is_disabled = page.is_disabled("#disabled-btn")
-        assert is_disabled
-    finally:
-        teardown(playwright, browser)`
+    Widget(session, id="danger-btn", text="Botão Perigo").click()
+    mensagem_depois_click = Widget(session, id="button-click-message").properties().get("text")
+    assert "Botão Perigo" in mensagem_depois_click
+
+    disabled_btn = Widget(session, id="disabled-btn")
+    assert disabled_btn.properties().get("enabled") is False
+
+    Widget(session, text="Próximo").click()
+        `,
+        selenium: `\n# Exemplo de automação para links ainda não implementado.`,
+        playwright: `\n# Exemplo de automação para links ainda não implementado.`
     },
     'links-section': {
-        pyautotk: `\n# Exemplo de automação para links ainda não implementado.`,
+        pyautotk: 
+        `
+@browser_session(MOCKUP_TEST_URL_FILE)
+def test_links(session):
+    Widget(session, id="simple-link").click()
+    session.accept_alert()
+
+    Widget(session, id="new-tab-link", text="Link em Nova Aba").click()
+    session.accept_alert()
+    session.switch_to_new_tab()
+    session.close_current_tab()
+
+    Widget(session, id="download-link", text="Link de Download").click()
+    time.sleep(0.5)
+    Widget(session, text="Próximo").click()
+        `,
         selenium: `\n# Exemplo de automação para links ainda não implementado.`,
         playwright: `\n# Exemplo de automação para links ainda não implementado.`
     },
     'forms-section': {
-        pyautotk: `
-@browser_session(f"file://{MOCKUP_TEST_URL_FILE}")
+        pyautotk: 
+        `
+@browser_session(MOCKUP_TEST_URL_FILE)
 def test_formularios(session):
-    Widget(session, id="text-input").enter_text("Texto de teste")
-    Widget(session, id="email-input").enter_text("teste@exemplo.com")
-    Widget(session, id="password-input").enter_text("senha123")
-    Widget(session, id="radio2").click()
-    Widget(session, id="submit-btn").click()
-    
-    form_data = Widget(session, id="form-data").properties().get("text")
-    assert "teste@exemplo.com" in form_data`,
-        selenium: `
-def test_form():
-    driver = setup_driver()
-    
-    try:
-        driver.find_element(By.ID, "text-input").send_keys("Texto de teste")
-        driver.find_element(By.ID, "email-input").send_keys("teste@exemplo.com")
-        driver.find_element(By.ID, "password-input").send_keys("senha123")
-        driver.find_element(By.ID, "radio2").click()
-        dropdown = Select(driver.find_element(By.ID, "dropdown"))
-        dropdown.select_by_visible_text("Opção 2")
-        driver.find_element(By.ID, "submit-btn").click()
+    dummy_file_path = os.path.abspath(os.path.join(base_dir, "dummy_upload.txt"))
+    with open(dummy_file_path, "w") as f:
+        f.write("This is a dummy text file to test file upload.")
 
-        form_data = driver.find_element(By.ID, "form-data").text
-        assert "teste@exemplo.com" in form_data
-    finally:
-        driver.quit()`,
-        playwright: `
-def test_form():
-    playwright, browser, page = setup_page()
-    
     try:
-        page.fill("#text-input", "Texto de teste")
-        page.fill("#email-input", "teste@exemplo.com")
-        page.fill("#password-input", "senha123")
-        page.click("#radio2")
-        page.select_option("#dropdown", label="Opção 2")
-        page.click("#submit-btn")
+        Widget(session, id="text-input").enter_text("Texto de teste")
+        Widget(session, id="email-input").enter_text("teste@exemplo.com")
+        Widget(session, id="password-input").enter_text("senha123")
+        Widget(session, id="number-input").enter_text(str(random.randint(1, 100)))
+        Widget(session, id="date-input", name="date-input").enter_text("11121999")
+
+        color_input = Widget(session, id="color-input")
+        new_color = "#EEFF00"
+        color_input.set_value(new_color)
+        retrieved_color = color_input.get_attribute("value")
+        assert retrieved_color.lower() == new_color.lower()
+
+        file_input = Widget(session, id="file-input")
+        file_input.upload_file(dummy_file_path)
+
+        range_input = Widget(session, id="range-input")
+        new_range_value = str(random.randint(1, 100))
+        range_input.set_value(new_range_value)
+        assert range_input.get_attribute("value") == new_range_value
+
+        Widget(session, id="textarea-input", name="textarea-input").enter_text(
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget nisi quam."
+            )
         
-        form_data = page.text_content("#form-data")
-        assert "teste@exemplo.com" in form_data
+        Widget(session, type="checkbox", value="opcao2").click()
+        Widget(session, type="checkbox", value="opcao1").click()
+        Widget(session, type="radio", value="opcao2").click()
+
+        single_dropdown = Widget(session, id="dropdown")
+        single_dropdown.scroll_to() 
+        single_dropdown.select_by_text("Opção 2")
+        assert single_dropdown.get_selected_texts() == ["Opção 2"]
+
+        multi_dropdown = Widget(session, id="multi-dropdown")
+        multi_dropdown.select_by_text("Opção 1")
+        multi_dropdown.select_by_index(2)
+        assert sorted(multi_dropdown.get_selected_texts()) == ["Opção 1", "Opção 3"]
+        multi_dropdown.deselect_by_text("Opção 1")
+        assert multi_dropdown.get_selected_texts() == ["Opção 3"]
+
+        Widget(session, type="submit", id="submit-btn").click()
+
+        form_data = Widget(session, id="form-data").properties().get("text")
+        assert "dummy_upload.txt" in form_data
+
     finally:
-        teardown(playwright, browser)`
+        if os.path.exists(dummy_file_path):
+            os.remove(dummy_file_path)
+    Widget(session, text="Próximo").click()
+        `,
+        selenium: `\n# Exemplo de automação para links ainda não implementado.`,
+        playwright: `\n# Exemplo de automação para links ainda não implementado.`
     },
     'hover-section': {
-        pyautotk: `
-@browser_session(f"file://{MOCKUP_TEST_URL_FILE}")
-def test_hover(session):
-    hover_div = Widget(session, id="hover-div")
-    hover_status = Widget(session, id="hover-status")
-    assert "não está" in hover_status.properties().get("text")
-    hover_div.hover()
-    assert "está sobre" in hover_status.properties().get("text")`,
-        selenium: `
-def test_hover():
-    driver = setup_driver()
-    
-    try:
-        hover_div = driver.find_element(By.ID, "hover-div")
-        hover_status = driver.find_element(By.ID, "hover-status")
-        assert "não está" in hover_status.text
+        pyautotk: 
+        `
+@browser_session(MOCKUP_TEST_URL_FILE)
+def test_tabs(session):
+    tab1_content = Widget(session, id="tab1")
+    assert "primeira" in tab1_content.properties().get("text")
 
-        actions = ActionChains(driver)
-        actions.move_to_element(hover_div).perform()
+    Widget(session, data_tab="tab2").click()
+    tab2_content = Widget(session, id="tab2")
+    assert "segunda" in tab2_content.properties().get("text")
 
-        assert "está sobre" in hover_status.text
-    finally:
-        driver.quit()`,
-        playwright: `
-def test_hover():
-    playwright, browser, page = setup_page()
-    
-    try:
-        status = page.text_content("#hover-status")
-        assert "não está" in status
-        page.hover("#hover-div")
-        status = page.text_content("#hover-status")
-        assert "está sobre" in status
-    finally:
-        teardown(playwright, browser)`
+    Widget(session, data_tab="tab3").click()
+    tab2_content = Widget(session, id="tab3")
+    assert "terceira" in tab2_content.properties().get("text")
+
+    Widget(session, text="Próximo").click()
+    `,
+        selenium: `\n# Exemplo de automação para links ainda não implementado.`,
+        playwright: `\n# Exemplo de automação para links ainda não implementado.`
     },
     'tabs-section': {
-        pyautotk: `
+        pyautotk: 
+        `
 @browser_session(f"file://{MOCKUP_TEST_URL_FILE}")
 def test_tabs(session):
     tab2_btn = Widget(session, data_tab="tab2")
     tab2_btn.click()
     tab2_content = Widget(session, id="tab2")
-    assert "segunda" in tab2_content.properties().get("text")`,
-        selenium: `
-def test_tabs():
-    driver = setup_driver()
-    
-    try:
-        driver.find_element(By.CSS_SELECTOR, "[data-tab='tab2']").click()
-        tab2_content = driver.find_element(By.ID, "tab2")
-        assert "segunda" in tab2_content.text
-    finally:
-        driver.quit()`,
-        playwright: `
-def test_tabs():
-    playwright, browser, page = setup_page()
-    
-    try:
-        page.click("[data-tab='tab2']")
-        tab2 = page.locator("#tab2")
-        assert "segunda tab" in tab2.text_content()
-    finally:
-        teardown(playwright, browser)`
+    assert "segunda" in tab2_content.properties().get("text")
+    `,
+        selenium: `\n# Exemplo de automação para links ainda não implementado.`,
+        playwright: `\n# Exemplo de automação para links ainda não implementado.`
     },
     'modal-section': {
-        pyautotk: `
-@browser_session(f"file://{MOCKUP_TEST_URL_FILE}")
+        pyautotk: 
+        `
+browser_session(MOCKUP_TEST_URL_FILE)
 def test_modal(session):
-    Widget(session, id="open-modal-btn").click()
-    modal = Widget(session, id="test-modal")
+    Widget(session, id="open-modal-btn", text="Abrir Modal").click()
+    modal = Widget(session, class_="modal", id="test-modal")
+
+    assert "modal simples que pode ser" in modal.properties().get("text")
     assert modal.properties().get("displayed")
-    Widget(session, text="Fechar").click()
-    assert not modal.properties().get("displayed")`,
-        selenium: `
-def test_modal():
-    driver = setup_driver()
     
-    try:
-        driver.find_element(By.ID, "open-modal-btn").click()
-        modal = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.ID, "test-modal"))
-        )
-        assert modal.is_displayed()
-        driver.find_element(By.CLASS_NAME, "close").click()
-        assert not modal.is_displayed()
-    finally:
-        driver.quit()`,
-        playwright: `
-def test_modal():
-    playwright, browser, page = setup_page()
-    
-    try:
-        page.click("#open-modal-btn")
-        modal = page.locator("#test-modal")
-        assert modal.is_visible()
-        page.click(".close")
-        assert modal.is_hidden()
-    finally:
-        teardown(playwright, browser)`
+    close_btn = Widget(session, class_="close")
+    assert close_btn.properties().get("displayed")
+    close_btn.click()
+
+    Widget(session, text="Próximo").click()
+    `,
+        selenium: `\n# Exemplo de automação para links ainda não implementado.`,
+        playwright: `\n# Exemplo de automação para links ainda não implementado.`
     },
     'alerts-section': {
         pyautotk: `
-@browser_session(f"file://{MOCKUP_TEST_URL_FILE}")
+@browser_session(MOCKUP_TEST_URL_FILE)
 def test_alertas(session):
     Widget(session, id="success-alert-btn").click()
     alert_success = Widget(session, class_="alert alert-success")
-    assert "Sucesso!" in alert_success.properties().get("text")`,
-        selenium: `
-def test_alerts_toasts():
-    driver = setup_driver()
-    
-    try:
-        driver.find_element(By.ID, "success-alert-btn").click()
-        alert = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert-success"))
-        )
-        assert "Sucesso!" in alert.text
-    finally:
-        driver.quit()`,
-        playwright: `
-def test_alerts_toasts():
-    playwright, browser, page = setup_page()
-    
-    try:
-        page.click("#success-alert-btn")
-        alert = page.locator(".alert-success")
-        assert alert.is_visible()
-        assert "Sucesso!" in alert.text_content()
-    finally:
-        teardown(playwright, browser)`
+    assert "Sucesso!" in alert_success.properties().get("text")
+
+    Widget(session, id="warning-alert-btn").click()
+    alert_warning = Widget(session, class_="alert alert-warning")
+    assert "Aviso!" in alert_warning.properties().get("text")
+
+    Widget(session, id="info-alert-btn").click()
+    alert_info = Widget(session, class_="alert alert-info")
+    assert "Informação!" in alert_info.properties().get("text")
+
+    Widget(session, id="error-alert-btn").click()
+    alert_error = Widget(session, class_="alert alert-danger")
+    assert "Erro!" in alert_error.properties().get("text")
+
+    Widget(session, id="toast-btn").click()
+    alert_warning = Widget(session, id="toast", class_="toast show-toast")
+    assert "toast!" in alert_warning.properties().get("text")
+
+    Widget(session, text="Próximo").click()
+    `,
+        selenium: `\n# Exemplo de automação para links ainda não implementado.`,
+        playwright: `\n# Exemplo de automação para links ainda não implementado.`
     },
     'dragdrop-section': {
-        pyautotk: `\n# A funcionalidade de Drag and Drop ainda não foi implementada no PyAutoTk.`,
-        selenium: `
-def test_drag_and_drop():
-    driver = setup_driver()
-    
-    try:
-        source = driver.find_element(By.ID, "drag-source")
-        target = driver.find_element(By.ID, "drop-target")
+        pyautotk: 
+        `
+@browser_session(MOCKUP_TEST_URL_FILE)
+def test_drag_and_drop(session):
+    source_drag = Widget(session, id="drag-source", draggable="true")
+    target_drop = Widget(session, id="drop-target")
+    status = Widget(session, id="dragdrop-status")
 
-        actions = ActionChains(driver)
-        actions.click_and_hold(source).move_to_element(target).release().perform()
-
-        status = driver.find_element(By.ID, "dragdrop-status")
-        assert "solto" in status.text
-    finally:
-        driver.quit()`,
-        playwright: `\n# A automação de Drag and Drop com Playwright requer uma abordagem mais avançada.`
+    assert "Nenhuma" in status.properties().get("text")
+    source_drag.drag_to(target_drop)
+    assert "solto" in status.properties().get("text")
+        `,
+        selenium: `\n# Exemplo de automação para links ainda não implementado.`,
+        playwright: `\n# Exemplo de automação para links ainda não implementado.`
     }
 };
 
