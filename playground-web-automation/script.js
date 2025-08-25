@@ -3,11 +3,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const container = document.querySelector(containerSelector);
         if (!container) return;
 
-        // Remove the old <pre> element to clear previous highlighting and line numbers
         const oldPre = container.querySelector('pre');
         if (oldPre) oldPre.remove();
 
-        // Create and append the new <pre> and <code> elements
         const newPre = document.createElement('pre');
         const newCode = document.createElement('code');
         newCode.className = 'language-python';
@@ -113,6 +111,21 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     form.addEventListener('reset', clearCustomFormUI);
+
+    const clearDragDropUI = () => {
+        const dragdropStatus = document.getElementById('dragdrop-status');
+        if (dragdropStatus) {
+            dragdropStatus.textContent = 'Nenhuma ação de drag and drop realizada.';
+        }
+        const dropTarget = document.getElementById('drop-target');
+        if (dropTarget) {
+            dropTarget.style.backgroundColor = '';
+        }
+        const dragSource = document.getElementById('drag-source');
+        if (dragSource) {
+            dragSource.style.opacity = '1';
+        }
+    };
 
     document.getElementById('file-input').addEventListener('change', function(event) {
         const file = event.target.files[0];
@@ -267,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (i === index) {
                 section.classList.add('active');
 
-                // Hide or show info section and navigation buttons based on welcome page
                 if (section.id === 'welcome-section') {
                     infoSection.style.display = 'none';
                     navigationButtons.style.visibility = 'hidden';
@@ -276,17 +288,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     navigationButtons.style.visibility = 'visible';
                 }
 
-                // If the new section is the form, reset it to its initial state.
                 if (section.id === 'forms-section') {
-                    document.getElementById('test-form').reset(); // Resets native form fields
-                    clearCustomFormUI(); // Resets our custom UI like previews
+                    document.getElementById('test-form').reset();
+                    clearCustomFormUI();
+                } else if (section.id === 'dragdrop-section') {
+                    clearDragDropUI();
                 }
 
                 const info = sectionInfo[section.id];
                 if (info) {
                     infoTitle.textContent = `Detalhes da Seção - ${info.title}`;
 
-                    // Update description in the playground section
                     const descriptionEl = section.querySelector('.section-description-dynamic');
                     if (descriptionEl) {
                         descriptionEl.innerHTML = info.description || '';
