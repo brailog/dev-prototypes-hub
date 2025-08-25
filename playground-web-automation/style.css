@@ -172,6 +172,49 @@ input[type="color"] {
     height: 35px;
 }
 
+.tooltip-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-color: #6c757d;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    line-height: 16px;
+    cursor: help;
+    font-weight: bold;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.file-preview-container {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px dashed #555;
+    border-radius: 4px;
+    min-height: 50px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: #333;
+}
+
+.file-preview-container img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 4px;
+}
+
+.file-preview-container pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    text-align: left;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    margin: 0;
+}
 .checkbox-group, .radio-group {
     margin: 10px 0;
 }

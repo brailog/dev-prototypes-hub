@@ -27,24 +27,67 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    const showToast = (message, duration = 6000) => {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.className = 'toast show-toast';
+        setTimeout(() => {
+            toast.className = toast.className.replace('show-toast', '');
+        }, duration);
+    };
+
     document.querySelectorAll('#links-section a:not(#disabled-link)').forEach(link => {
         link.addEventListener('click', function(e) {
-            if (this.id !== 'new-tab-link' && this.id !== 'download-link') {
-                e.preventDefault();
+            if (this.id === 'download-link') {
+                showToast('O download da imagem será iniciado... Confira na pasta de Download.');
+                return;
             }
-            if (this.id !== 'download-link') {
-                alert(`Link "${this.textContent}" foi clicado.`);
+            alert(`Link "${this.textContent}" foi clicado.`);
+            if (this.id === 'simple-link') {
+                e.preventDefault();
             }
         });
     });
 
-    document.getElementById('test-form').addEventListener('submit', function(e) {
+    document.getElementById('test-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         const formData = new FormData(this);
         const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
+
+        const readFileAsBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
+                reader.readAsDataURL(file);
+            });
+        };
+
+        for (const [key, value] of formData.entries()) {
+            if (data[key]) {
+                if (!Array.isArray(data[key])) {
+                    data[key] = [data[key]];
+                }
+                data[key].push(value);
+            } else {
+                data[key] = value;
+            }
+        }
+
+        const fileInputKey = 'file-input';
+        const file = data[fileInputKey];
+        if (file instanceof File && file.size > 0) {
+            const fileContent = await readFileAsBase64(file);
+            data[fileInputKey] = {
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                content_preview: fileContent.substring(0, 70) + '...'
+            };
+        } else if (file instanceof File) {
+            data[fileInputKey] = { name: "", size: 0, type: "" };
+        }
         
         document.getElementById('form-data').textContent = JSON.stringify(data, null, 2);
         document.getElementById('form-result').style.display = 'block';
@@ -52,6 +95,57 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('range-input').addEventListener('input', function() {
         document.getElementById('range-value').textContent = this.value;
+    });
+
+    const form = document.getElementById('test-form');
+
+    const clearCustomFormUI = () => {
+        const previewContainer = document.getElementById('file-preview');
+        previewContainer.innerHTML = '';
+        previewContainer.style.display = 'none';
+
+        const rangeInput = document.getElementById('range-input');
+        document.getElementById('range-value').textContent = rangeInput.defaultValue || '50';
+
+        const formResult = document.getElementById('form-result');
+        formResult.style.display = 'none';
+        document.getElementById('form-data').textContent = '';
+    };
+
+    form.addEventListener('reset', clearCustomFormUI);
+
+    document.getElementById('file-input').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const previewContainer = document.getElementById('file-preview');
+
+        previewContainer.innerHTML = '';
+        previewContainer.style.display = 'none';
+
+        if (!file) {
+            return;
+        }
+
+        previewContainer.style.display = 'flex';
+
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        } else if (file.type === 'text/plain') {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const pre = document.createElement('pre');
+                pre.textContent = e.target.result;
+                previewContainer.appendChild(pre);
+            };
+            reader.readAsText(file);
+        } else {
+            previewContainer.textContent = 'Pré-visualização não disponível para este tipo de arquivo.';
+        }
     });
 
     const hoverDiv = document.getElementById('hover-div');
@@ -125,12 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     
     document.getElementById('toast-btn').addEventListener('click', () => {
-        const toast = document.getElementById('toast');
-        toast.className = 'toast show-toast';
-        
-        setTimeout(() => {
-            toast.className = toast.className.replace('show-toast', '');
-        }, 3000);
+        showToast('Esta é uma notificação toast!');
     });
 
     
@@ -185,6 +274,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     infoSection.style.display = 'block';
                     navigationButtons.style.visibility = 'visible';
+                }
+
+                // If the new section is the form, reset it to its initial state.
+                if (section.id === 'forms-section') {
+                    document.getElementById('test-form').reset(); // Resets native form fields
+                    clearCustomFormUI(); // Resets our custom UI like previews
                 }
 
                 const info = sectionInfo[section.id];
