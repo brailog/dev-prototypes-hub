@@ -280,9 +280,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (i === index) {
                 section.classList.add('active');
 
-                if (section.id === 'welcome-section') {
+            if (section.id === 'welcome-section' || section.id === 'feedback-section') {
                     infoSection.style.display = 'none';
-                    navigationButtons.style.visibility = 'hidden';
+                navigationButtons.style.visibility = (section.id === 'welcome-section') ? 'hidden' : 'visible';
                 } else {
                     infoSection.style.display = 'block';
                     navigationButtons.style.visibility = 'visible';
@@ -305,22 +305,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
 
-                
-                const snippets = codeSnippets[section.id] || { pyautotk: '', selenium: '', playwright: '' };
-                const pyautotkCode = (codeHeaders.pyautotk + (snippets.pyautotk || '\n# Exemplo não disponível.')).trim();
-                const seleniumCode = (codeHeaders.selenium + (snippets.selenium || '\n# Exemplo não disponível.')).trim();
-                const playwrightCode = (codeHeaders.playwright + (snippets.playwright || '\n# Exemplo não disponível.')).trim();
-                updateCodeBlock('#pyautotk-code', pyautotkCode);
-                updateCodeBlock('#selenium-code', seleniumCode);
-                updateCodeBlock('#playwright-code', playwrightCode);
+                // Only update code if the info section is visible
+                if (infoSection.style.display === 'block') {
+                    const snippets = codeSnippets[section.id] || { pyautotk: '', selenium: '' };
+                    const pyautotkCode = (codeHeaders.pyautotk + (snippets.pyautotk || '\n# Exemplo não disponível.')).trim();
+                    const seleniumCode = (codeHeaders.selenium + (snippets.selenium || '\n# Exemplo não disponível.')).trim();
+                    updateCodeBlock('#pyautotk-code', pyautotkCode);
+                    updateCodeBlock('#selenium-code', seleniumCode);
 
-                
-                if (window.hljs) {
-                    document.querySelectorAll('.code-content pre code').forEach(block => {
-                        hljs.highlightElement(block);
-                    });
-                    
-                    hljs.initLineNumbersOnLoad();
+                    if (window.hljs) {
+                        document.querySelectorAll('.code-content pre code').forEach(block => {
+                            hljs.highlightElement(block);
+                        });
+                        
+                        hljs.initLineNumbersOnLoad();
+                    }
                 }
             } else {
                 section.classList.remove('active');

@@ -21,11 +21,14 @@
                 <section id="welcome-section" class="playground-section">
                     <h2>Bem-vindo ao Playground de Automação!</h2>
                     <p>
-                        Esta página é um ambiente interativo projetado para praticar e testar scripts de automação web.
-                        Você pode usar ferramentas como <strong>PyAutoTk</strong>, <strong>Selenium</strong> e <strong>Playwright</strong> para interagir com os elementos em cada seção.
+                        Este é um ambiente interativo projetado para praticar e comparar scripts de automação web.
+                        O objetivo é explorar diferentes desafios de automação e analisar as implementações de código lado a lado, usando <strong>PyAutoTk</strong> e <strong>Selenium</strong>.
                     </p>
                     <p>
-                        Clique em "Começar" para iniciar. Após iniciar, use os botões "Anterior" e "Próximo" que aparecerão no canto superior para navegar entre os desafios. A seção de informações abaixo fornecerá detalhes e exemplos de código para cada tarefa.
+                        Navegue pelas seções usando os botões "Anterior" e "Próximo". Cada seção apresenta um cenário de automação genérico, com exemplos de código para ambas as bibliotecas. Observe as diferenças na sintaxe, simplicidade e abordagem.
+                    </p>
+                    <p>
+                        Ao final, você encontrará uma seção de feedback. Sua opinião é muito valiosa, pois contribuirá para um estudo científico que busca validar a hipótese de que ferramentas de automação modernas, como o PyAutoTk, podem reduzir a curva de aprendizado e tornar a programação de automação mais acessível para não-programadores.
                     </p>
                     <p>
                         Para saber mais sobre o PyAutoTk, confira os links: <a href="https://github.com/brailog/PyAutoTk" target="_blank">GitHub</a>, <a href="https://pypi.org/project/pyautotk/" target="_blank">PyPI</a>, e a <a href="https://pyautotk.readthedocs.io/en/dev-icst/" target="_blank">Documentação Oficial</a>.
@@ -254,6 +257,20 @@
                     </div>
                     <p id="dragdrop-status">Nenhuma ação de drag and drop realizada.</p>
                 </section>
+
+                <section id="feedback-section" class="playground-section">
+                    <h2>Feedback e Comparação</h2>
+                    <p class="section-description-dynamic"></p>
+                    <p>
+                        Obrigado por explorar o playground! Sua perspectiva é extremamente importante para nossa pesquisa.
+                    </p>
+                    <p>
+                        Você poderia dedicar mais 5 minutos para responder a algumas perguntas? Seu feedback nos ajudará a testar a hipótese de que ferramentas como o PyAutoTk podem simplificar a automação e reduzir a curva de aprendizado para novos programadores.
+                    </p>
+                    <p style="text-align: center; margin-top: 25px; font-size: 1.1em;">
+                        <a href="[COLOQUE O LINK DO SEU GOOGLE FORM AQUI]" target="_blank">Acessar o Formulário de Feedback (5 min)</a>
+                    </p>
+                </section>
             </div>
         </div>
         <div class="info-section">
@@ -273,16 +290,6 @@
                 <div class="code-example">
                     <button class="code-toggle" data-target="selenium-code">Selenium</button>
                     <div id="selenium-code" class="code-content">
-                        <button class="copy-btn" title="Copiar código">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
-                        </button>
-                        <pre><code class="language-python"></code></pre>
-                    </div>
-                </div>
-
-                <div class="code-example">
-                    <button class="code-toggle" data-target="playwright-code">Playwright</button>
-                    <div id="playwright-code" class="code-content">
                         <button class="copy-btn" title="Copiar código">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
                         </button>
